@@ -1,9 +1,9 @@
 {
-  "name": "JSON Formatter",
+  "name": "JSON Crack Formatter",
   "version": "0.7.1",
   "manifest_version": 3,
-  "description": "Makes JSON easy to read. Open source.",
-  "homepage_url": "https://github.com/callumlocke/json-formatter",
+  "description": "Visualize your JSON data into graphs.",
+  "homepage_url": "https://github.com/bokub/json-crack-formatter",
   "minimum_chrome_version": "88",
   "icons": {
     "128": "icons/128.png",

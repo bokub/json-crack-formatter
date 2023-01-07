@@ -10,6 +10,7 @@ import { JsonArray, JsonObject, JsonValue } from './lib/types'
 import { assert } from './lib/assert'
 
 const PERFORMANCE_DEBUGGING = false
+let theme = 'light'
 
 const cssPromise = new Promise<string>((resolve) => {
   chrome.storage.local.get('themeOverride', (result) => {
@@ -20,6 +21,7 @@ const cssPromise = new Promise<string>((resolve) => {
         resolve(css)
         break
       case 'force_dark':
+        theme = 'dark'
         resolve(css + '\n\n' + darkThemeCss)
         break
 
@@ -78,6 +80,12 @@ const resultPromise = (async (): Promise<{
   // Detach the pre
   originalPreElement.remove()
 
+  // Create JSON Crack embed
+  const jsonCrackIframe = document.createElement('iframe')
+  jsonCrackIframe.id = 'jsonCrackEmbed'
+  jsonCrackIframe.src = 'https://jsoncrack.com/widget'
+  jsonCrackIframe.frameBorder = '0'
+
   // Add inner containers
   const parsedJsonContainer = document.createElement('div')
   parsedJsonContainer.id = 'jsonFormatterParsed'
@@ -88,6 +96,12 @@ const resultPromise = (async (): Promise<{
   rawJsonContainer.id = 'jsonFormatterRaw'
   rawJsonContainer.append(originalPreElement)
   document.body.appendChild(rawJsonContainer)
+
+  const jsonCrackContainer = document.createElement('div')
+  jsonCrackContainer.hidden = true
+  jsonCrackContainer.id = 'jsonCrack'
+  jsonCrackContainer.append(jsonCrackIframe)
+  document.body.appendChild(jsonCrackContainer)
 
   // Try to parse as JSON
   {
@@ -134,27 +148,34 @@ const resultPromise = (async (): Promise<{
       const buttonPlainSpan = document.createElement('span')
       const buttonFormatted = document.createElement('button')
       const buttonFormattedSpan = document.createElement('span')
+      const buttonJsonCrack = document.createElement('button')
+      const buttonJsonCrackSpan = document.createElement('span')
       buttonPlain.appendChild(buttonPlainSpan)
       buttonFormatted.appendChild(buttonFormattedSpan)
+      buttonJsonCrack.appendChild(buttonJsonCrackSpan)
 
       buttonPlain.id = 'buttonPlain'
       buttonPlainSpan.innerText = 'Raw'
       buttonFormatted.id = 'buttonFormatted'
       buttonFormattedSpan.innerText = 'Parsed'
       buttonFormatted.classList.add('selected')
+      buttonJsonCrack.id = 'buttonJsonCrack'
+      buttonJsonCrackSpan.innerText = 'JSON Crack'
 
       // Handle toggle button events
-      let plainOn = false
+      let activeTab = 'formatted'
       buttonPlain.addEventListener(
         'mousedown',
         () => {
-          if (!plainOn) {
-            plainOn = true
+          if (activeTab !== 'r') {
+            activeTab = 'r'
             rawJsonContainer.hidden = false
             parsedJsonContainer.hidden = true
+            jsonCrackContainer.hidden = true
 
             buttonFormatted.classList.remove('selected')
             buttonPlain.classList.add('selected')
+            buttonJsonCrack.classList.remove('selected')
           }
         },
         false
@@ -163,13 +184,46 @@ const resultPromise = (async (): Promise<{
       buttonFormatted.addEventListener(
         'mousedown',
         function () {
-          if (plainOn) {
-            plainOn = false
+          if (activeTab !== 'f') {
+            activeTab = 'f'
             rawJsonContainer.hidden = true
             parsedJsonContainer.hidden = false
+            jsonCrackContainer.hidden = true
 
             buttonFormatted.classList.add('selected')
             buttonPlain.classList.remove('selected')
+            buttonJsonCrack.classList.remove('selected')
+          }
+        },
+        false
+      )
+
+      let jsonCrackLoaded = false
+      buttonJsonCrack.addEventListener(
+        'mousedown',
+        () => {
+          if (activeTab !== 'c') {
+            activeTab = 'c'
+            rawJsonContainer.hidden = true
+            parsedJsonContainer.hidden = true
+            jsonCrackContainer.hidden = false
+
+            buttonFormatted.classList.remove('selected')
+            buttonPlain.classList.remove('selected')
+            buttonJsonCrack.classList.add('selected')
+
+            if (!jsonCrackLoaded && jsonCrackIframe.contentWindow) {
+              jsonCrackIframe.contentWindow.postMessage(
+                {
+                  json: rawPreContent,
+                  options: {
+                    theme,
+                  },
+                },
+                '*'
+              )
+              jsonCrackLoaded = true
+            }
           }
         },
         false
@@ -177,6 +231,7 @@ const resultPromise = (async (): Promise<{
 
       optionBar.appendChild(buttonPlain)
       optionBar.appendChild(buttonFormatted)
+      optionBar.appendChild(buttonJsonCrack)
 
       document.body.prepend(optionBar)
 

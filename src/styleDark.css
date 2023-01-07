@@ -51,7 +51,7 @@ a:active {
   color: #707070;
 }
 
-:is(#buttonPlain, #buttonFormatted) {
+:is(#buttonPlain, #buttonFormatted, #buttonJsonCrack) {
   text-shadow: none;
   border: 0;
   background: hsl(200, 35%, 60%);
@@ -59,13 +59,13 @@ a:active {
   color: #000;
 }
 
-:is(#buttonPlain, #buttonFormatted):not(.selected):hover {
+:is(#buttonPlain, #buttonFormatted, #buttonJsonCrack):not(.selected):hover {
   box-shadow: none;
   background: hsl(200, 50%, 70%);
   color: #000;
 }
 
-:is(#buttonPlain, #buttonFormatted).selected {
+:is(#buttonPlain, #buttonFormatted, #buttonJsonCrack).selected {
   box-shadow: inset 0px 1px 5px rgba(0, 0, 0, 0.7);
   background: hsl(200, 40%, 60%);
   color: #000;

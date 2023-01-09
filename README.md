@@ -1,6 +1,6 @@
 # JSON Crack Formatter
 
-> A fork of the [JSON Formatter Chrome extension](https://github.com/callumlocke/json-formatter) with a [JSON Crack](https://jsoncrack.com/) visualizer.
+> A fork of the [JSON Formatter Chrome extension](https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa) with a [JSON Crack](https://jsoncrack.com/) visualizer.
 
 ![2023-01-07_11-31](https://user-images.githubusercontent.com/17952318/211146746-26a73d2a-025e-4199-bda6-b579e4798f47.png)
 
@@ -14,9 +14,11 @@ https://callumlocke.github.io/json-formatter/
 
 ## Installation
 
-~~**Option 1 (recommended)** – Install it from the [Chrome Web Store](https://chrome.google.com/webstore/detail/ioanjonjikjnimckmaobngpeheholkko).~~ (currently waiting for Google validation)
+**Option 1 (recommended)** – Install it from the [Chrome Web Store](https://chrome.google.com/webstore/detail/ioanjonjikjnimckmaobngpeheholkko).
 
 **Option 2** – Install it from source (see below).
+
+**N.B**: If you have installed [JSON Formatter](https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa), you need to uninstall it.
 
 ### Development
 
